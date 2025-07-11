@@ -17,7 +17,7 @@ export const UploadWidget = () => {
         <Collapsible.Content>
           <UploadWidgetHeader />
 
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 py-3">
             <UploadWidgetDropzone />
 
             <div className="h-px bg-zinc-800 border-t border-black/25 box-content" />
