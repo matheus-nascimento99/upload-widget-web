@@ -13,7 +13,7 @@ export const UploadWidgetDropzone = () => {
     })
   
   return (
-    <div className="px-5 flex flex-col gap-3">
+    <div className="px-3 flex flex-col gap-3">
       <div 
       data-active={isDragActive}
       className='cursor-pointer h-32 rounded-lg flex flex-col justify-center items-center p-5 text-zinc-400 bg-zinc-950 border border-dashed border-zinc-700 hover:border-zinc-600 transition-colors data-[active=true]:bg-indigo-500/10 data:[active=true]:border-indigo-500 data-[active=true]:text-indigo-400'
