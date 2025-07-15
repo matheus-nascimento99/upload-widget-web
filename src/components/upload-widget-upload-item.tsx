@@ -2,7 +2,7 @@ import { Download, ImageUp, Link2, RefreshCcw, X } from "lucide-react"
 import { Button } from "./ui/button"
 import * as Progress from '@radix-ui/react-progress'
 
-export const UploadWidgetUploadsItem = () => {
+export const UploadWidgetUploadItem = () => {
   return (
     <div className="relative rounded-lg p-3 bg-white/2 flex flex-col gap-3 shadow-shape-content overflow-hidden">
       <div className="flex flex-col gap-1">
