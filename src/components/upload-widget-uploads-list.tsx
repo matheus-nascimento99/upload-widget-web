@@ -3,7 +3,7 @@ import { UploadWidgetUploadItem } from "./upload-widget-upload-item";
 import { motion } from 'motion/react'
 
 export function UploadWidgetUploadsList() {
-  const { uploads } = useUploads()
+  const uploads = useUploads(state => state.uploads)
   
   const isUploadListEmpty = uploads.size === 0;
 
