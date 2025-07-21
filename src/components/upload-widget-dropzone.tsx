@@ -1,13 +1,14 @@
 import { useDropzone } from 'react-dropzone'
 import { CircularProgressBar } from './ui/circular-progress-bar'
 import { motion } from 'motion/react'
-import { useUploads } from '../store/uploads'
+import { usePendingUploads, useUploads } from '../store/uploads'
 
 export const UploadWidgetDropzone = () => {
-  const { addUploads } = useUploads()
+  const uploads = useUploads(store => store.uploads)
+  const addUploads = useUploads(store => store.addUploads)
+
+  const { globalPercentage, isThereAnyPendingUpload } = usePendingUploads()
   
-  const isThereAnyPendingUpload = false
-  const uploadGlobalPercentage = 66
 
   const { getRootProps, getInputProps, isDragActive } 
     = useDropzone({
@@ -37,8 +38,8 @@ export const UploadWidgetDropzone = () => {
         
         {isThereAnyPendingUpload ? (
           <div className='flex flex-col gap-2.5 items-center select-none'>
-            <CircularProgressBar progress={uploadGlobalPercentage} size={56} strokeWidth={4} />
-            <span className='text-xs'>Uploading 2 files...</span>
+            <CircularProgressBar progress={globalPercentage} size={56} strokeWidth={4} />
+            <span className='text-xs'>Uploading {uploads.size} files...</span>
           </div>
         ) : (
           <>
