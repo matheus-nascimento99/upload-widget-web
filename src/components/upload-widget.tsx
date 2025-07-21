@@ -15,13 +15,17 @@ export const UploadWidget = () => {
         animate={isWidgetOpen ? 'open' : 'closed'}
         variants={{
           open: {
-            width: 400
+            width: 400,
+            height: 'auto',
+            transition: {
+              duration: 0.1
+            }
           },
           closed: {
-            transition: { type: 'inertia' }
+            width: 'max-content',
+            height: 44,
           } 
         }}
-        transition={{ duration: 0.1 }}
         className="bg-zinc-900 overflow-hidden max-w-[400px] rounded-lg shadow-shape"
       >
 
