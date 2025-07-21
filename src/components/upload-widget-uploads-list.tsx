@@ -3,7 +3,7 @@ import { UploadWidgetUploadItem } from "./upload-widget-upload-item";
 import { motion } from 'motion/react'
 
 export function UploadWidgetUploadsList() {
-  const uploads = useUploads(state => state.uploads)
+  const uploads = useUploads(store => store.uploads)
   
   const isUploadListEmpty = uploads.size === 0;
 
@@ -23,7 +23,11 @@ export function UploadWidgetUploadsList() {
       ) : (
         <div className="flex flex-col gap-2">
           {Array.from(uploads.entries()).map(([uploadId, upload]) => {
-            return <UploadWidgetUploadItem key={uploadId} upload={upload} />
+            return <UploadWidgetUploadItem 
+              key={uploadId} 
+              upload={upload}
+              uploadId={uploadId} 
+            />
           })}
         </div>
       )}
