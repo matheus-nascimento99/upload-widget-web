@@ -1,18 +1,24 @@
 import { Download, ImageUp, Link2, RefreshCcw, X } from "lucide-react"
 import { Button } from "./ui/button"
 import * as Progress from '@radix-ui/react-progress'
+import type { Upload } from "../store/uploads"
+import { formatBytes } from "../utils/format-bytes"
 
-export const UploadWidgetUploadItem = () => {
+type UploadWidgetUploadItemProps = {
+  upload: Upload
+}
+
+export const UploadWidgetUploadItem = ({ upload }: UploadWidgetUploadItemProps) => {
   return (
     <div className="relative rounded-lg p-3 bg-white/2 flex flex-col gap-3 shadow-shape-content overflow-hidden">
       <div className="flex flex-col gap-1">
         <span className="text-xs flex items-center gap-1">
           <ImageUp className="size-3 text-zinc-300" strokeWidth={1.5} />
-          <span className="font-medium">screenshot.png</span>
+          <span className="font-medium">{upload.name}</span>
         </span>
 
         <span className="text-xxs text-zinc-400 flex items-center gap-1.5">
-          <span className="line-through">3MB</span>
+          <span className="line-through">{formatBytes(upload.file.size)}</span>
           <div className="size-1 rounded-full bg-zinc-700" />
           <span>
             300KB
