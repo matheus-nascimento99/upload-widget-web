@@ -14,6 +14,10 @@ export const UploadWidgetUploadItem = (
 ) => {
   const cancelUpload = useUploads(store => store.cancelUpload)
 
+  const progress = Math.min(
+    Math.round((upload.uploadInBytes * 100) / upload.originalInBytes)
+  )
+
   return (
     <div className="relative rounded-lg p-3 bg-white/2 flex flex-col gap-3 shadow-shape-content overflow-hidden">
       <div className="flex flex-col gap-1">
@@ -23,7 +27,7 @@ export const UploadWidgetUploadItem = (
         </span>
 
         <span className="text-xxs text-zinc-400 flex items-center gap-1.5">
-          <span className="line-through">{formatBytes(upload.file.size)}</span>
+          <span className="line-through">{formatBytes(upload.originalInBytes)}</span>
           <div className="size-1 rounded-full bg-zinc-700" />
           <span>
             300KB
@@ -34,7 +38,7 @@ export const UploadWidgetUploadItem = (
           <div className="size-1 rounded-full bg-zinc-700" />
 
           {upload.status === 'success' && <span>100%</span>}
-          {upload.status === 'progress' && <span>43%</span>}
+          {upload.status === 'progress' && <span>{progress}%</span>}
           {upload.status === 'canceled' && <span className="text-yellow-400">Canceled</span>}
           {upload.status === 'error' && <span className="text-red-400">Error</span> }
         </span>
@@ -45,8 +49,8 @@ export const UploadWidgetUploadItem = (
         className="group bg-zinc-800 rounded-full h-1 overflow-hidden"
       >
         <Progress.Indicator 
-          className="h-1 bg-indigo-500 group-data-[status=success]:bg-green-400 group-data-[status=canceled]:bg-yellow-400 group-data-[status=error]:bg-red-400" 
-          style={{ width: upload.status === 'progress' ? '45%' : '100%' }} 
+          className="h-1 bg-indigo-500 group-data-[status=success]:bg-green-400 group-data-[status=canceled]:bg-yellow-400 group-data-[status=error]:bg-red-400 transition-all" 
+          style={{ width: upload.status === 'progress' ? `${progress}%` : '100%' }} 
         />
       </Progress.Root>
       

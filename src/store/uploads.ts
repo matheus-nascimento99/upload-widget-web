@@ -9,6 +9,8 @@ export type Upload = {
   file: File
   abortController: AbortController
   status: 'progress' | 'success' | 'error' | 'canceled'
+  originalInBytes: number
+  uploadInBytes: number
 }
 
 type UploadState = {
@@ -30,7 +32,17 @@ export const useUploads = create<UploadState, [['zustand/immer', never]]>(
 
       try {
         await uploadFileToStorage(
-          { file: upload.file }, 
+          { 
+            file: upload.file,
+            onProgress(sizeInBytes) {
+              set(state => {
+                state.uploads.set(uploadId, {
+                  ...upload,
+                  uploadInBytes: sizeInBytes
+                })
+              })
+            }, 
+          }, 
           { signal: upload.abortController.signal }
         )
         
@@ -82,7 +94,9 @@ export const useUploads = create<UploadState, [['zustand/immer', never]]>(
           name: file.name,
           file: file,
           abortController,
-          status: 'progress'
+          status: 'progress',
+          originalInBytes: file.size,
+          uploadInBytes: 0,
         }
 
         set(state => {
