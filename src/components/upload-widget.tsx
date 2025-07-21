@@ -1,4 +1,3 @@
-import { useState } from "react"
 import { UploadWidgetDropzone } from "./upload-widget-dropzone"
 import { UploadWidgetHeader } from "./upload-widget-header"
 import * as Collapsible from '@radix-ui/react-collapsible'
@@ -7,11 +6,13 @@ import { UploadWidgetUploadsList } from "./upload-widget-uploads-list"
 import { motion, useCycle } from 'motion/react'
 
 export const UploadWidget = () => {
+  const isThereAnyPendingUpload = true
   const [isWidgetOpen, toggleWidget] = useCycle(false, true)
 
   return (
-    <Collapsible.Root onOpenChange={() => toggleWidget()}>
+    <Collapsible.Root onOpenChange={() => toggleWidget()} asChild>
       <motion.div 
+        data-progress={isThereAnyPendingUpload}
         animate={isWidgetOpen ? 'open' : 'closed'}
         variants={{
           open: {
@@ -26,7 +27,7 @@ export const UploadWidget = () => {
             height: 44,
           } 
         }}
-        className="bg-zinc-900 overflow-hidden max-w-[400px] rounded-lg shadow-shape"
+        className="bg-zinc-900 overflow-hidden max-w-[400px] rounded-lg data-[state=open]:shadow-shape border border-transparent animate-border data-[state=closed]:rounded-3xl data-[state=closed]:data-[progress=false]:shadow-shape data-[state=closed]:data-[progress=true]:[background:linear-gradient(45deg,#09090B,theme(colors.zinc.900)_50%,#09090B)_padding-box,conic-gradient(from_var(--border-angle),theme(colors.zinc.700/.48)_80%,_theme(colors.indigo.500)_86%,_theme(colors.indigo.300)_90%,_theme(colors.indigo.500)_94%,_theme(colors.zinc.600/.48))_border-box]"
       >
 
         {!isWidgetOpen && <UploadWidgetMinimizedButton />}
