@@ -3,6 +3,7 @@ import { Button } from "./ui/button"
 import * as Progress from '@radix-ui/react-progress'
 import { useUploads, type Upload } from "../store/uploads"
 import { formatBytes } from "../utils/format-bytes"
+import { downloadUrl } from "../utils/download-url"
 
 type UploadWidgetUploadItemProps = {
   uploadId: string
@@ -13,9 +14,13 @@ export const UploadWidgetUploadItem = (
   { uploadId, upload }: UploadWidgetUploadItemProps
 ) => {
   const cancelUpload = useUploads(store => store.cancelUpload)
+  const retryUpload = useUploads(store => store.retryUpload)
 
   const progress = Math.min(
-    Math.round((upload.uploadInBytes * 100) / upload.originalInBytes)
+    upload.compressedSizeInBytes 
+      ? Math.round((upload.uploadInBytes * 100) / upload.originalSizeInBytes)
+      : 0,
+    100
   )
 
   return (
@@ -27,13 +32,21 @@ export const UploadWidgetUploadItem = (
         </span>
 
         <span className="text-xxs text-zinc-400 flex items-center gap-1.5">
-          <span className="line-through">{formatBytes(upload.originalInBytes)}</span>
+          <span className="line-through">{formatBytes(upload.originalSizeInBytes)}</span>
           <div className="size-1 rounded-full bg-zinc-700" />
           <span>
-            300KB
-            <span className="text-green-400 ml-1">
-              -94%
-            </span>
+            {formatBytes(upload.compressedSizeInBytes ?? 0)}
+            {upload.compressedSizeInBytes && (
+              <span className="text-green-400 ml-1">
+                -
+                {Math.round(
+                  ((upload.originalSizeInBytes - upload.compressedSizeInBytes) *
+                    100) /
+                    upload.originalSizeInBytes
+                )}
+                %
+              </span>
+            )}
           </span>
           <div className="size-1 rounded-full bg-zinc-700" />
 
@@ -54,13 +67,26 @@ export const UploadWidgetUploadItem = (
         />
       </Progress.Root>
       
-      <div className="absolute right-2.5 top-2.5 flex items-center gap-2">
-        <Button size="icon-sm" disabled={upload.status !== 'success'}>
+      <div className="absolute right-2 top-2 flex items-center gap-2">
+        <Button 
+          size="icon-sm" 
+          disabled={!upload.remoteUrl}
+          onClick={() => {
+            if (upload.remoteUrl) {
+              downloadUrl(upload.remoteUrl);
+            }
+          }}
+        >
           <Download className="size-3.5" strokeWidth={1.5} />
           <span className="sr-only">Download image</span>
         </Button>
 
-        <Button size="icon-sm" disabled={upload.status !== 'success'}>
+        <Button 
+          size="icon-sm" 
+          disabled={!upload.remoteUrl}
+          onClick={() => upload.remoteUrl 
+            && navigator.clipboard.writeText(upload.remoteUrl)}
+        >
           <Link2 className="size-3.5" strokeWidth={1.5} />
           <span className="sr-only">Copy remote URL</span>
         </Button>
@@ -68,6 +94,7 @@ export const UploadWidgetUploadItem = (
         <Button 
           size="icon-sm"
           disabled={!['error', 'canceled'].includes(upload.status)}
+          onClick={() => retryUpload(uploadId)}
         >
           <RefreshCcw className="size-3.5" strokeWidth={1.5} />
           <span className="sr-only">Retry upload</span>
